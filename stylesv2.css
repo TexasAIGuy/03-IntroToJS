@@ -1,0 +1,508 @@
+/* =========================================================
+   stylesv2.css — Starship Space Vibe ✨🚀
+   Works with your High–Low Game (no popups) HTML/JS.
+   ========================================================= */
+
+/* ----------------------------
+   0) THEME VARIABLES (colors)
+   ---------------------------- */
+:root {
+  --bg-deep: #05070f;           /* near-black space */
+  --bg-gradient-1: #0a0f1e;     /* deep blue */
+  --bg-gradient-2: #120a2a;     /* deep purple */
+  --glass: rgba(255, 255, 255, 0.06);
+  --glass-strong: rgba(255, 255, 255, 0.12);
+  --bg-image-url: url("./Milkyway2.jpg"); /*picture background*/
+  --bg-image-opacity: 0.22;   /* subtle so text stays readable */
+  --bg-image-blur: 2px;       /* slight softening */
+
+  --text-main: #eaf2ff;         /* soft white/blue */
+  --text-dim: #9cb3ff;          /* dimmed blue text */
+
+  --accent: #7cf0ff;            /* cyan glow */
+  --accent-2: #b77bff;          /* purple glow */
+  --accent-3: #f7f3a3;          /* starlight yellow */
+
+  --success: #5cf2a6;           /* win green */
+  --warn: #ffcc66;              /* soft warning */
+  --danger: #ff6f91;            /* pink/red */
+
+  --radius-2xl: 1.25rem;
+  --radius-xl: 1rem;
+
+  --shadow-neon: 0 0 10px rgba(124, 240, 255, 0.5),
+                 0 0 20px rgba(124, 240, 255, 0.35),
+                 0 0 40px rgba(124, 240, 255, 0.2);
+
+  --shadow-purple: 0 0 10px rgba(183, 123, 255, 0.45),
+                   0 0 22px rgba(183, 123, 255, 0.3),
+                   0 0 44px rgba(183, 123, 255, 0.18);
+}
+
+/* --------------------------------
+   1) GLOBAL RESET + BASE TYPOGRAPHY
+   -------------------------------- */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+html::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3; /* far back */
+  background-image: var(--bg-image-url);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(var(--bg-image-blur));
+  opacity: var(--bg-image-opacity);
+  pointer-events: none;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  color: var(--text-main);
+  line-height: 1.6;
+
+  /* Space gradient */
+  background: radial-gradient(1200px 800px at 20% 10%, #0b1130 0%, transparent 60%),
+              radial-gradient(1000px 700px at 80% 20%, #1a0e3a 0%, transparent 60%),
+              linear-gradient(180deg, var(--bg-gradient-1), var(--bg-gradient-2));
+
+  /* Layer the starfield with pseudo-elements */
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ------------------------
+   2) STARFIELD BACKGROUND
+   ------------------------ */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Far stars (small, many, slow) */
+body::before {
+  background:
+    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 70% 30%, rgba(255,255,255,0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 90% 60%, rgba(255,255,255,0.5) 50%, transparent 51%),
+    radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 80% 10%, rgba(255,255,255,0.5) 50%, transparent 51%);
+  animation: drift 120s linear infinite;
+  opacity: 0.7;
+}
+
+/* Near stars (bigger, fewer, twinkle) */
+body::after {
+  background:
+    radial-gradient(2px 2px at 25% 35%, rgba(255,255,255,0.9) 50%, transparent 51%),
+    radial-gradient(2px 2px at 60% 70%, rgba(255,255,255,0.9) 50%, transparent 51%),
+    radial-gradient(2px 2px at 85% 25%, rgba(255,255,255,0.9) 50%, transparent 51%);
+  animation: twinkle 3.2s ease-in-out infinite;
+  opacity: 0.9;
+}
+/* New: dedicated background image layer */
+body::backdrop, body::marker {} /* noop to avoid editor warnings */
+
+body::selection {} /* noop */
+
+body._bgImageLayer { display:none } /* noop */
+
+body::placeholder {} /* noop */
+
+/* Use another pseudo-element for the image, behind the starfield */
+body::cue { content:""; } /* noop */
+body::view-transition-group(root) {} /* ignore */
+
+@keyframes drift {
+  0%   { transform: translateY(0); }
+  100% { transform: translateY(200px); }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50%      { opacity: 1; }
+}
+
+/* -----------------------------
+   3) LAYOUT / CONTAINERS / TITLES
+   ----------------------------- */
+h1 {
+  text-align: center;
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  letter-spacing: 0.04em;
+  margin: 28px 0 10px;
+  text-shadow: 0 0 18px rgba(124, 240, 255, 0.35);
+  position: relative;
+  isolation: isolate; /* makes the pseudo-element clip nicely */
+  transition: transform 200ms ease, text-shadow 300ms ease, letter-spacing 200ms ease;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent; /* gradient text */
+}
+
+h1::after {
+  /* warp trail “streak” */
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 60%;
+  height: 10px;
+  transform: translateX(-50%) translateY(-6px) scaleX(0.2);
+  background: radial-gradient(60% 100% at 50% 50%, rgba(124,240,255,0.6), transparent 70%);
+  filter: blur(8px);
+  opacity: 0;
+  transition: opacity 200ms ease, transform 250ms ease;
+  z-index: -1;
+}
+
+h1:hover,
+h1:focus-visible {
+  transform: translateY(-2px) scale(1.03);
+  letter-spacing: 0.06em;
+  text-shadow:
+    0 0 12px rgba(124,240,255,0.45),
+    0 0 28px rgba(183,123,255,0.35);
+}
+
+h1:hover::after,
+h1:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-8px) scaleX(1);
+}
+
+section {
+  width: min(92vw, 720px);
+  margin: 0 auto;
+  background: linear-gradient(180deg, var(--glass), rgba(255,255,255,0.02));
+  border: 1px solid rgba(124, 240, 255, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 20px 18px;
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), inset 0 0 30px rgba(124, 240, 255, 0.06);
+}
+
+/* Add extra glow to the main game card */
+#game {
+  box-shadow: var(--shadow-neon);
+}
+
+/* Headings */
+h2, h3 {
+  margin: 0.75rem 0 0.5rem;
+  color: var(--accent);
+  letter-spacing: 0.03em;
+  text-shadow: 0 0 10px rgba(124, 240, 255, 0.35);
+}
+
+/* -----------------------
+   4) MESSAGE & COUNTERS
+   ----------------------- */
+#message {
+  margin: 0 0 0.75rem;
+  font-size: 1.05rem;
+  color: var(--text-main);
+}
+
+#message.success { color: var(--success); text-shadow: 0 0 10px rgba(92,242,166,0.4); }
+#message.warn    { color: var(--warn);    text-shadow: 0 0 10px rgba(255,204,102,0.35); }
+#message.info    { color: var(--text-main); }
+
+#roundCounter {
+  color: var(--text-dim);
+  font-size: 0.98rem;
+}
+
+/* -------------------
+   5) FORM + INPUT UI
+   ------------------- */
+#guessForm {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: end;
+  margin-top: 0.5rem;
+}
+
+label {
+  grid-column: 1 / -1;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+}
+
+#guessInput {
+  appearance: none;
+  -moz-appearance: textfield;
+  outline: none;
+  border: 1px solid rgba(124, 240, 255, 0.35);
+  background: rgba(10, 20, 40, 0.6);
+  color: var(--text-main);
+  padding: 10px 12px;
+  border-radius: var(--radius-xl);
+  font-size: 1rem;
+  transition: box-shadow 200ms ease, border-color 200ms ease, transform 120ms ease;
+  box-shadow: inset 0 0 14px rgba(124, 240, 255, 0.08);
+}
+
+#guessInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(124, 240, 255, 0.2), var(--shadow-neon);
+  transform: translateY(-1px);
+}
+
+/* Hide number input spin buttons (Chrome/Safari) */
+#guessInput::-webkit-outer-spin-button,
+#guessInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --------------
+   6) BUTTONS 🛸
+   -------------- */
+button {
+  cursor: pointer;
+  border: 1px solid rgba(124, 240, 255, 0.35);
+  background: linear-gradient(180deg, rgba(124,240,255,0.18), rgba(124,240,255,0.06));
+  color: var(--text-main);
+  padding: 10px 14px;
+  border-radius: var(--radius-xl);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: transform 120ms ease, box-shadow 200ms ease, border-color 200ms ease, background 200ms ease;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 0 18px rgba(124, 240, 255, 0.12);
+  position: relative;
+  overflow: hidden; /* so the laser stays inside */
+}
+
+button:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-neon);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 6px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 35%, var(--accent-2) 65%, transparent 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms ease;
+  box-shadow:
+    0 0 10px rgba(124,240,255,0.55),
+    0 0 18px rgba(183,123,255,0.45);
+  border-radius: 2px;
+}
+
+button:hover::after,
+button:focus-visible::after {
+  transform: scaleX(1);
+}
+
+#againBtn {
+  margin-left: 8px;
+}
+
+/* Disabled state */
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Special accent for Reset */
+#resetBtn {
+  border-color: rgba(183, 123, 255, 0.5);
+  background: linear-gradient(180deg, rgba(183,123,255,0.2), rgba(183,123,255,0.06));
+}
+#resetBtn:hover {
+  box-shadow: var(--shadow-purple);
+  border-color: var(--accent-2);
+}
+
+/* Confirm inline row */
+#resetRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+#resetConfirm button {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+#resetYes {
+  border-color: rgba(255, 111, 145, 0.6);
+  background: linear-gradient(180deg, rgba(255,111,145,0.22), rgba(255,111,145,0.08));
+}
+#resetNo {
+  border-color: rgba(124, 240, 255, 0.4);
+}
+
+/* ---------------
+   7) STATS PANEL
+   --------------- */
+#stats {
+  margin-top: 18px;
+}
+
+#stats p {
+  margin: 0.3rem 0;
+}
+
+#attemptList {
+  margin: 0.25rem 0 0.5rem;
+  padding-left: 1.25rem;
+}
+
+#attemptList li {
+  margin: 0.25rem 0;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(124, 240, 255, 0.18);
+  border-radius: 10px;
+  box-shadow: inset 0 0 12px rgba(124, 240, 255, 0.06);
+}
+
+/* ---------------
+   8) UTILITIES
+   --------------- */
+[aria-live="polite"] {
+  /* helps with screen readers updating stats/messages */
+}
+
+/* A subtle divider style if needed */
+.hr {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,240,255,0.3), transparent);
+  margin: 16px 0;
+}
+
+/* -------------------------------
+   9) ACCESSIBILITY / PREFERENCES
+   ------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Focus outline for keyboard users */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* Optional: tastefully themed scrollbar (WebKit/Blink) */
+*::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(124,240,255,0.6), rgba(183,123,255,0.6));
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+}
+
+/* ============================
+   ROCKET THRUSTER + ANIMATION
+   ============================ */
+
+#rocketDock {
+  display: inline-block;
+  margin: 6px 0 0;
+  height: 40px;         /* keeps layout stable when flame appears */
+}
+
+#rocket {
+  position: relative;
+  display: inline-block;
+  font-size: 32px;      /* rocket size */
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(124,240,255,0.35));
+  opacity: 0; /*Hidden*/
+  transform: translateY(4px) scale(0.9); /* tucked away */
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+/* Show the rocket when we’re ready (on win) */
+#rocket.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Thruster flame (hidden by default) */
+#rocket::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 24px;
+  border-radius: 50% 50% 55% 55%;
+  pointer-events: none;
+  opacity: 0;
+  /* layered glow cone */
+  background:
+    radial-gradient(50% 60% at 50% 0%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.0) 60%),
+    radial-gradient(60% 100% at 50% 10%, rgba(255,240,150,0.9) 0%, rgba(255,240,150,0.0) 70%),
+    radial-gradient(70% 120% at 50% 30%, rgba(255,160,60,0.8) 0%, rgba(255,160,60,0.0) 75%),
+    radial-gradient(80% 140% at 50% 60%, rgba(124,240,255,0.75) 0%, rgba(124,240,255,0.0) 80%);
+  filter: blur(0.6px) drop-shadow(0 0 10px rgba(255,200,80,0.6)) drop-shadow(0 0 18px rgba(124,240,255,0.45));
+  transform-origin: top center;
+}
+
+/* Ignite state: show flame + subtle lift + bob */
+#rocket.ignite {
+  animation: rocketBob 800ms ease-in-out 2;
+  transform: translateY(-2px);
+}
+#rocket.ignite::after {
+  opacity: 1;
+  animation: flameFlicker 160ms ease-in-out infinite, flameStretch 900ms ease-in-out;
+}
+
+/* Flicker + stretch give the flame some life */
+@keyframes flameFlicker {
+  0%   { transform: translateX(-50%) scaleY(0.9) }
+  50%  { transform: translateX(-50%) scaleY(1.15) }
+  100% { transform: translateX(-50%) scaleY(0.95) }
+}
+@keyframes flameStretch {
+  0%   { height: 14px; }
+  40%  { height: 28px; }
+  100% { height: 20px; }
+}
+@keyframes rocketBob {
+  0%   { transform: translateY(-2px); }
+  50%  { transform: translateY(-6px); }
+  100% { transform: translateY(-2px); }
+}

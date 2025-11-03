@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rebel Strategy Game</title>
+  <link rel="stylesheet" href="./stylesv2.css" />
+  <script src="./warpdrive.js" defer></script>
+</head>
+<body>
+  <h1>Rebel Force Strategy Game</h1>
+
+  <!-- 🎮 GAME AREA: We talk to the player and collect guesses here -->
+  <section id="game" style="max-width: 500px;">
+    <!-- 🗣️ This is where the game “speaks” to the player -->
+    <p id="message">Click “Start Game” to begin!</p>
+    <div id="rocketDock" aria-hidden="true">
+      <span id="rocket">🚀</span>
+    </div>
+
+    <!-- 🔢 The guessing form (no popups!) -->
+    <form id="guessForm" autocomplete="off" style="display:none;">
+      <!-- type="number" gives the player a number box -->
+      <label for="guessInput">Your guess (1–100):</label>
+      <input id="guessInput" type="number" min="1" max="100" required />
+      <button id="guessBtn" type="submit">Guess</button>
+    </form>
+
+    <!-- ▶️ Start + 🔁 Play Again buttons -->
+    <div style="margin-top:0.75rem;">
+      <button id="startBtn">Start Game</button>
+      <button id="againBtn" style="display:none;">Play Again</button>
+    </div>
+
+    <!-- 🧮 Live counter for this round -->
+    <p id="roundCounter" style="margin-top:0.5rem; display:none;">
+      Attempts this round: <strong id="attemptsThisRound">0</strong>
+    </p>
+  </section>
+
+  <!-- 📊 STATS AREA -->
+  <section id="stats" aria-live="polite" style="margin-top:1.5rem; max-width: 500px;">
+    <h2>Game Stats</h2>
+    <p>Total games played: <strong id="totalGames">0</strong></p>
+    <p>Best (fewest attempts): <strong id="best">—</strong></p>
+    <p>Average attempts: <strong id="average">—</strong></p>
+
+    <h3>Attempts by Game</h3>
+    <ol id="attemptList"></ol>
+
+    <!-- 🔁 Reset stats with inline confirmation (no confirm popups) -->
+    <div id="resetRow" style="margin-top:0.5rem;">
+      <button id="resetBtn">Reset Stats</button>
+      <span id="resetConfirm" style="display:none; margin-left:0.5rem;">
+        Reset all stats? 
+        <button id="resetYes">Yes</button>
+        <button id="resetNo">No</button>
+      </span>
+    </div>
+  </section>
+</body>
+</html>
